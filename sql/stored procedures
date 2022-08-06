@@ -1,0 +1,80 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_earnings`()
+BEGIN
+declare e_year int;
+declare e_month int;
+declare f_earnings int;
+declare tv_earnings int;
+declare finished_flag int;
+
+declare f_cursor cursor for
+	select  year(`payment_date`),month(`payment_date`),sum(amount)
+    from payment 
+    inner join rental on rental.inventory_id = inventory.inventory_id
+	where rental.inventory_id is not null
+    group by month(`payment_date`);
+    
+declare tv_cursor cursor for
+	select  year(`payment_date`),month(`payment_date`),sum(amount)
+    from payment 
+    inner join rental on rental.inventory_id = inventory.inventory_id
+	where rental.inventory_id is null
+    group by month(`payment_date`);
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_most_rentals`(IN w_type enum('m','s'),IN nlimit int, IN f_date date, IN l_date date)
+BEGIN
+
+declare f_id smallint(5);
+declare f_title text;
+declare finished_flag int;
+
+declare f_cursor cursor for
+	select film.film_id,title 
+    from film 
+    inner join inventory on inventory.film_id = film.film_id
+    inner join rental on rental.inventory_id = inventory.inventory_id
+	where rental.rental_date between f_date and l_date
+    group by film_id 
+    order by count(*) desc
+    limit nlimit;
+	DECLARE s_cursor cursor for 
+	select tv_show.tv_show_id,title
+    from tv_show
+    inner join tv_show_inventory on tv_show_inventory.tv_show_id = tv_show.tv_show_id
+    inner join rental on rental.inventory_id = inventory.inventory_id;
+
+
+
+
+declare continue handler for not found set finished_flag=1;
+open f_cursor;
+set finished_flag=0;
+fetch f_cursor into f_id, f_title;
+while (finished_flag=0) do 
+	select f_id as 'Film ID' , f_title as 'Title';
+    fetch f_cursor into f_id, f_title;
+end while;
+close f_cursor;
+END
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `show_rentals_on_date`(IN c_email varchar(45), IN r_date date)
+BEGIN
+declare rental_count int;
+declare finished_flag int;
+declare r_cursor cursor for
+	select count(*) 
+    from rental
+    inner join customer on customer.customer_id = rental.customer_id
+    where date(rental.rental_date) = r_date AND c_email = customer.email
+    group by rental.customer_id;
+    
+declare continue handler for not found set finished_flag=1;
+open r_cursor;
+set finished_flag=0;
+fetch r_cursor into rental_count;
+while (finished_flag=0) do 
+	select c_email as 'Customer Email' , rental_count as 'Rentals';
+    fetch r_cursor into rental_count, c_email;
+end while;
+close r_cursor;
+END

@@ -1,0 +1,28 @@
+CREATE DEFINER=`root`@`localhost` TRIGGER `up1072507`.`insert_AFTER_INSERT_log` 
+AFTER INSERT ON `rental` FOR EACH ROW 
+BEGIN 
+Declare log_email varchar(50); 
+set log_email = (select email from customer where customer_id = new.customer_id);
+INSERT INTO log(id,email,acount_type,action_type,action_table,action_date,action_status) VALUES(new.rental_id,log_email,"CUSTOMER",'INSERT' ,"renta", NOW(),"SUCCEED");
+END
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `up1072507`.`rental_AFTER_DELETE_log` AFTER DELETE ON `rental` FOR EACH ROW 
+BEGIN 
+declare log_email varchar(50);
+set log_email = (select email from customer where customer_id = old.customer_id); 
+INSERT INTO log(id,email,acount_type,action_type,action_table,action_date,action_status) VALUES(old.rental_id,log_email,"CUSTOMER",'INSERT',"rental",NOW(),SUCCEED);
+END
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `up1072507`.`payment_AFTER_INSERT_log` AFTER INSERT ON `payment` FOR EACH ROW 
+BEGIN
+declare log_email varchar(50);
+set log_email = (select email from customer where customer_id = new.customer_id); INSERT INTO log(id,email,acount_type,action_type,action_table,action_date,action_status) 
+VALUES(new.payment_id,log_email,CUSTOMER, 'INSERT', 'payment' ,NOW(),'SUCCEED');
+END
+
+CREATE DEFINER=`root`@`localhost` TRIGGER `up1072507`.`payment_AFTER_UPDATE_log` AFTER UPDATE ON `payment` FOR EACH ROW
+BEGIN
+declare log_email varchar(50);
+set log_email = (select email from customer where customer_id = new.customer_id);
+  INSERT INTO log(id,email,acount_type,action_type,action_table,action_date,action_status) VALUES(new.payment_id,log_email,"CUSTOMER",'UPDATE' ,"payment" ,NOW(),"SUCCEED");
+  END
