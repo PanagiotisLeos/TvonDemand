@@ -1,0 +1,55 @@
+public class movies {
+
+
+    private String title;
+    private String description;
+    private int release_year;
+    private int length;
+    private String rating;
+    private String special_features;
+
+    public movies(String title, String description, int release_year, int length, String rating, String special_features) {
+        super();
+
+        this.title = title;
+        this.description = description;
+
+        this.release_year = release_year;
+        this.length = length;
+        this.rating = rating;
+        this.special_features = special_features;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getRelease_Year() {
+        return release_year;
+    }
+
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public String getSpecial_Features() {
+        return special_features;
+    }
+
+
+    @Override
+    public String toString() {
+        return String
+                .format("Films [title=%s, description=%s, release_year=%s,length=%s, rating=%s, special_features=%s]",
+                        description, release_year, length, rating, special_features);
+    }
+}
