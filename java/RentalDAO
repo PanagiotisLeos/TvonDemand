@@ -1,0 +1,120 @@
+import java.io.FileInputStream;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+public class RentalDAO {
+    private Connection myConn;
+
+    public RentalDAO() throws Exception {
+
+        // get db properties
+        Properties props = new Properties();
+        props.load(new FileInputStream("demo.properties"));
+
+        String user = props.getProperty("user");
+        String password = props.getProperty("password");
+        String dburl = props.getProperty("dburl");
+
+        // connect to database
+        myConn = DriverManager.getConnection(dburl, user, password);
+
+        System.out.println("DB connection successful to: " + dburl);
+    }
+
+    public List<Rental> getAllRental() throws Exception {
+        List<Rental> list = new ArrayList<>();
+
+        Statement myStmt = null;
+        ResultSet myRs = null;
+
+        try {
+            myStmt = myConn.createStatement();
+            myRs = myStmt.executeQuery("select * from rental");
+
+            while (myRs.next()) {
+                Rental tempRental = convertRowToRental(myRs);
+                list.add(tempRental);
+            }
+
+            return list;
+        } finally {
+            close(myStmt, myRs);
+        }
+    }
+
+    public List<Rental> searchRental(String customer_id) throws Exception {
+        List<Rental> list = new ArrayList<>();
+
+        PreparedStatement myStmt = null;
+        ResultSet myRs = null;
+
+        try {
+            customer_id += "%";
+            myStmt = myConn.prepareStatement("select * from rental where customer_id like ?");
+
+            myStmt.setString(1, customer_id);
+
+            myRs = myStmt.executeQuery();
+
+            while (myRs.next()) {
+                Rental tempRental = convertRowToRental(myRs);
+                list.add(tempRental);
+            }
+
+            return list;
+        } finally {
+            close(myStmt, myRs);
+        }
+    }
+
+    private Rental convertRowToRental(ResultSet myRs) throws SQLException {
+
+
+
+        int rental_id = myRs.getInt("rental_id");
+        var rental_date = myRs.getString("rental_date");
+        int inventory_id = myRs.getInt("inventory_id");
+        int customer_id = myRs.getInt("customer_id");
+
+
+
+
+        Rental tempRental = new Rental(rental_id, rental_date, inventory_id, customer_id);
+
+        return tempRental;
+    }
+
+
+    private static void close(Connection myConn, Statement myStmt, ResultSet myRs)
+            throws SQLException {
+
+        if (myRs != null) {
+            myRs.close();
+        }
+
+        if (myStmt != null) {
+
+        }
+
+        if (myConn != null) {
+            myConn.close();
+        }
+    }
+
+    private void close(Statement myStmt, ResultSet myRs) throws SQLException {
+        close(null, myStmt, myRs);
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        RentalDAO dao = new RentalDAO();
+        System.out.println(dao.searchRental("thom"));
+
+        System.out.println(dao.getAllRental());
+    }
+
+}
+
