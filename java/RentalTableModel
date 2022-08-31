@@ -1,0 +1,63 @@
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+class RentalTableModel extends AbstractTableModel {
+
+
+    private static final int RENTAL_ID_COL = 0;
+    private static final int RENTAL_DATE_COL = 1;
+    private static final int INVENTORY_ID_COL = 2;
+    private static final int CUSTOMER_ID_COL = 3;
+
+
+
+    private String[] columnNames = {"rental_id", "rental_date", "inventory_id", "customer_id"};
+    private List<Rental> Rental;
+
+    public RentalTableModel(List<Rental> theRental) {
+        Rental = theRental;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    @Override
+    public int getRowCount() {
+        return Rental.size();
+    }
+
+    @Override
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
+
+    @Override
+    public Object getValueAt(int row, int col) {
+
+        Rental tempRental = Rental.get(row);
+
+        switch (col) {
+
+            case RENTAL_ID_COL:
+                return tempRental.getRental_id();
+            case RENTAL_DATE_COL:
+                return tempRental.getRental_date();
+            case INVENTORY_ID_COL:
+                return tempRental.getInventory_id();
+
+            case CUSTOMER_ID_COL:
+                return tempRental.getCustomer_id();
+
+            default:
+                return tempRental.getRental_id();
+        }
+    }
+
+    @Override
+    public Class getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
+}
+
