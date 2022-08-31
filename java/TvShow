@@ -1,0 +1,62 @@
+public class TvShow {
+
+
+    private String title;
+    private String description;
+    private int release_year;
+    private int seasons;
+    private int episodes;
+    private int length;
+    private String rating;
+
+
+    public TvShow(String title, String description, int release_year,int seasons,int episodes, int length, String rating) {
+        super();
+
+        this.title = title;
+        this.description = description;
+        this.release_year = release_year;
+        this.seasons= seasons;
+        this.episodes=episodes;
+        this.length = length;
+        this.rating = rating;
+
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getRelease_Year() {
+        return release_year;
+    }
+
+    public int getSeasons(){
+        return seasons;
+    }
+
+    public int getEpisodes(){
+        return episodes;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return String
+                .format("Films [title=%s, description=%s, release_year=%s,seasons=%s, episodes=%s, length=%s, rating=%s, special_features=%s]",
+                        description, release_year, seasons, episodes, length, rating);
+    }
+}
