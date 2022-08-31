@@ -1,0 +1,71 @@
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+class TvShowTableModel extends AbstractTableModel {
+
+
+    private static final int TITLE_COL = 0;
+    private static final int DESCRIPTION_COL = 1;
+    private static final int RELEASE_YEAR_COL = 2;
+    private static final int SEASONS=3;
+    private static final int EPISODES=4;
+    private static final int LENGTH_COL = 5;
+    private static final int RATING_COL = 6;
+
+
+
+    private String[] columnNames = {"title", "description", "release_year", "seasons", "episodes", "length", "rating"
+             };
+    private List<TvShow> TvShow;
+
+    public TvShowTableModel(List<TvShow> theTvShow) {
+        TvShow = theTvShow;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    @Override
+    public int getRowCount() {
+        return TvShow.size();
+    }
+
+    @Override
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
+
+    @Override
+    public Object getValueAt(int row, int col) {
+
+        TvShow tempTvShow = TvShow.get(row);
+
+        switch (col) {
+
+            case TITLE_COL:
+                return tempTvShow.getTitle();
+            case DESCRIPTION_COL:
+                return tempTvShow.getDescription();
+            case RELEASE_YEAR_COL:
+                return tempTvShow.getRelease_Year();
+            case SEASONS:
+                return tempTvShow.getSeasons();
+            case EPISODES:
+                return tempTvShow.getEpisodes();
+
+            case LENGTH_COL:
+                return tempTvShow.getLength();
+            case RATING_COL:
+                return tempTvShow.getRating();
+            default:
+                return tempTvShow.getTitle();
+        }
+    }
+
+    @Override
+    public Class getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
+}
