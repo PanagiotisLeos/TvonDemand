@@ -1,0 +1,67 @@
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+class moviesTableModel extends AbstractTableModel {
+
+
+    private static final int TITLE_COL = 0;
+    private static final int DESCRIPTION_COL = 1;
+    private static final int RELEASE_YEAR_COL = 2;
+    private static final int LENGTH_COL = 3;
+    private static final int RATING_COL = 4;
+    private static final int SPECIAL_FEATURES_COL = 5;
+
+
+    private String[] columnNames = {"title", "description", "release_year", "length", "rating",
+            "special_features" };
+    private List<movies> movies;
+
+    public moviesTableModel(List<movies> themovies) {
+        movies = themovies;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    @Override
+    public int getRowCount() {
+        return movies.size();
+    }
+
+    @Override
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
+
+    @Override
+    public Object getValueAt(int row, int col) {
+
+        movies tempmovies = movies.get(row);
+
+        switch (col) {
+
+            case TITLE_COL:
+                return tempmovies.getTitle();
+            case DESCRIPTION_COL:
+                return tempmovies.getDescription();
+            case RELEASE_YEAR_COL:
+                return tempmovies.getRelease_Year();
+
+            case LENGTH_COL:
+                return tempmovies.getLength();
+            case RATING_COL:
+                return tempmovies.getRating();
+            case SPECIAL_FEATURES_COL:
+                return  tempmovies.getSpecial_Features();
+            default:
+                return tempmovies.getTitle();
+        }
+    }
+
+    @Override
+    public Class getColumnClass(int c) {
+        return getValueAt(0, c).getClass();
+    }
+}
